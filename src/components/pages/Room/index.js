@@ -2,7 +2,6 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import "../../../styles/chess.css";
 import MultiPlayerGame from "../../chess/MultiPlayerGame";
-
 import "../Room/style.css";
 
 const Room = ({ socket, username }) => {
@@ -10,23 +9,18 @@ const Room = ({ socket, username }) => {
   console.log(roomId);
   // Emit a join event to the server when a user joins a room on component mount
   useEffect(() => {
-    socket.emit("in-room", roomId);
+    socket.emit("join_room", roomId);
     socket.on("user array", (receivedArr) => {
       console.log(receivedArr);
     });
   }, []);
 
-  const [msgInputted, setMsgInputted] = useState("");
-  const [messages, setMessages] = useState([]);
-
-  //   returning messages are sent with the event "return-message". We then use the spread op "..." to copy the array so we can map over it with our new message.
-  socket.on("return-message", (newMsg) => {
-    setMessages([...messages, newMsg]);
-  });
-
   socket.on("user-joined", (userFromSocket) => {
     console.log(`${userFromSocket} has joined the room`);
   });
+
+  const [msgInputted, setMsgInputted] = useState("");
+  const [messages, setMessages] = useState([]);
 
   //   form control
   const handleChatInput = (e) => {
@@ -37,14 +31,23 @@ const Room = ({ socket, username }) => {
   //   emitting the event "send-message" with our username and message from form below
   const sendMsg = (e) => {
     e.preventDefault();
-    socket.emit("send-message", {
+    socket.emit("send_message", {
+      room: roomId,
       username: username,
       message: msgInputted,
     });
     console.log(username);
     console.log(msgInputted);
-    setMessages([...messages, `You: ${msgInputted}`]);
   };
+
+  socket.on("received_message", (newMsg) => {
+    const renNewMsg = newMsg.split(":");
+    console.log(renNewMsg);
+    if (renNewMsg[0] === username) {
+      return setMessages([...messages, `You: ${renNewMsg[1]}`]);
+    }
+    setMessages([...messages, newMsg]);
+  });
 
   return (
     <section>
@@ -58,24 +61,16 @@ const Room = ({ socket, username }) => {
               <div className="mobileComp">
                 <div id="userDiv">
                   <div id="user">
-                    <p>username</p>
-                    <div id="userVideo">
-                      user video
-                    </div>
-                    <div id="userPieces">
-                      user pieces captured
-                    </div>
+                    <p>{username}</p>
+                    <div id="userVideo">user video</div>
+                    <div id="userPieces">user pieces captured</div>
                   </div>
                 </div>
                 <div id="oppDiv">
                   <div id="opponent">
                     <p>oppUser</p>
-                    <div id="oppVideo">
-                      opp video
-                    </div>
-                    <div id="oppPieces">
-                    opp pieces captured
-                    </div>
+                    <div id="oppVideo">opp video</div>
+                    <div id="oppPieces">opp pieces captured</div>
                   </div>
                 </div>
               </div>
@@ -86,9 +81,7 @@ const Room = ({ socket, username }) => {
             <div className="mainComponent">
               {/* <div id="timer">timer</div> */}
               <div id="chessboard">
-                <MultiPlayerGame
-                  roomId={roomId}
-                  username={username} />
+                <MultiPlayerGame roomId={roomId} username={username} />
               </div>
             </div>
           </div>
