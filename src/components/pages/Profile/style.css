@@ -1,7 +1,7 @@
-.left{
-  /* display: flex;
+.left {
+  display: flex;
   flex-direction: row;
-  flex-wrap: wrap; */
+  flex-wrap: wrap;
   width: 40vw;
   height: 87vh;
 }
@@ -23,9 +23,8 @@
   height: 96%;
   margin: 5px 5px 5px 20px;
   padding: 5px;
-  background-color: white;
+  background: var(--br2-g);
   border-radius: 5px;
-
 }
 
 #feedBody {
@@ -33,10 +32,11 @@
   height: 96%;
   margin: 5px 20px 5px 10px;
   padding: 5px;
-  background-color: white;
+  background: var(--br2-g);
   border-radius: 5px;
 }
 
+h2,
 h3 {
   text-align: center;
   padding-bottom: 1vh;
@@ -51,7 +51,25 @@ h3 {
   background-color: white;
   border: 2px solid var(--g1);
   border-radius: 50%;
+}
 
+#saveButtonDiv {
+  display: flex;
+  justify-content: center;
+}
+
+#saveButton {
+  background-color: var(--g1);
+  border: none;
+  color: var(--br2);
+  padding: 7px 16px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 5px 1px;
+  cursor: pointer;
+  border-radius: 5px;
 }
 
 #userBio {
@@ -61,35 +79,37 @@ h3 {
 
 /* =============== media query =============== */
 @media all and (max-width: 600px) {
-  .left{
+  .column {
+    flex-direction: row;
+  }
+
+  .left {
     border-bottom: 2px solid var(--g2);
     border-right: none;
-    width: 100%;
-    height: 30vh;
+    height: 87vh;
+    width: 40%;
+    margin: 0px 2px 0px 10px;
   }
 
   .right {
-    width: 100%;
-    height: 57vh;
+    height: 87vh;
+    width: 65%;
   }
 
   #profileSection {
     display: flex;
     flex-direction: row;
-    margin: 1vw 1vw 1vw 5vw;
-    width: 100%;
-    justify-content: top;
+    margin: 0px;
     align-items: normal;
   }
-  
+
   #feedBody {
-    margin: 2vh 2vw;
-    width: 100%;
+    margin: 0px;
   }
 
   #avatar {
-    height: 10rem;
-    width: 10rem;
+    height: 20vh;
+    width: 20vh;
   }
 
   #userBio {

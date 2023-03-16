@@ -2,10 +2,13 @@ import React, { useState } from "react";
 // import API from "../../../utils/API";
 import Axios from "axios";
 import "../Profile/style.css";
+import API from "../../../utils/API.js";
 
 const Profile = (props) => {
   const [imageSelected, setImageSelected] = useState("");
   const [publicPhotoUrl, setPublicPhotoUrl] = useState("");
+  const [isEditing, setIsEditing] = useState(false);
+  const [bio, setBio] = useState("");
   // const [username, setUsername] = useState("");
 
   const uploadImage = () => {
@@ -23,8 +26,22 @@ const Profile = (props) => {
       })
       .catch((error) => {
         console.log(error);
-      });
+      }
+    );
   };
+
+  const handleUpdateUserBio = (e) => {
+    e.preventDefault();
+    const bioObj = {
+      bio: bio
+    };
+    API.editBio(bioObj).then((data) => {
+      if (data.token) {
+        props.setIsEditing(true);
+        props.setBio(data.user.bio);
+      }
+    })
+  }
 
   return (
     <section>
@@ -32,7 +49,7 @@ const Profile = (props) => {
         <div className="left">
           <div id="profileSection">
             <div>
-              <h3>{props.username}</h3>
+              <h2>{props.username}</h2>
               <div id="avatar">
                 <label htmlFor="profile-image">
                   {publicPhotoUrl ? (
@@ -70,14 +87,25 @@ const Profile = (props) => {
                   }}
                 />
               </div>
-              <button onClick={uploadImage}>Save</button>
+              <div id="saveButtonDiv">
+                <button id="saveButton" onClick={uploadImage}>
+                  Save
+                </button>
+              </div>
             </div>
 
-            <div id="userBio">USER BIO</div>
+            <div id="userBio">
+              {/* <h3>BIOGRAPHY</h3>
+              <div className="profileBtns">
+                <button onClick={handleUpdateUserBio}>Edit</button>
+              </div> */}
+            </div>
           </div>
         </div>
         <div className="right">
-          <div id="feedBody">STATS FEED</div>
+          <div id="feedBody">
+            <h3>GAME STATS</h3>
+          </div>
         </div>
       </div>
     </section>
