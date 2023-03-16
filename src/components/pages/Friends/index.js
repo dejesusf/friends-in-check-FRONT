@@ -23,9 +23,8 @@ const Friends = ({ userId, username }) => {
   const findUser = (e) => {
     e.preventDefault();
     API.getUsersByUsername(searchedUser).then((data) => {
-      const friend = data.username.find((f) => f.username === searchedUser);
-      if (friend) {
-        setUserFriends([friend]);
+      if (data.username === searchedUser) {
+        setUserFriends([data.friend]);
       }
     });
   };
@@ -37,7 +36,7 @@ const Friends = ({ userId, username }) => {
       <div className="column">
         <div className="friendPageDiv">
           <div className="userInfoDiv">
-            <h2>{username}</h2>
+            <h2>{username}'s friends</h2>
             <input
               type="input"
               id="user-search"
@@ -49,7 +48,6 @@ const Friends = ({ userId, username }) => {
           </div>
 
           <div className="friendsDiv">
-            <h2>Friends List</h2>
             {userFriends.map((friend) => (
               <p>{friend.username}</p>
             ))}
